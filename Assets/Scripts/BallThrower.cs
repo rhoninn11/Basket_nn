@@ -7,15 +7,10 @@ public class BallThrower : MonoBehaviour
 {
     // Start is called before the first frame update
     public GameObject ballPrefab;
-    private List<Ball> ballCollection;
-    private bool hasBallsPerformScoreCalculation = false;
-    public int throwCount;
+    private List<Ball> _ballCollection = new List<Ball>();
+    private bool _allThrowsPerformed = false;
 
-    public BallThrower()
-    {
-        ballCollection = new List<Ball>();
-    }
-    public Vector3 GetThrowPosition()
+    private Vector3 _GetThrowPosition()
     {
         Vector3 heightOffset = new Vector3(0, 0.94f, 0);
         Vector3 throwPoint = this.transform.position + heightOffset;
@@ -23,40 +18,47 @@ public class BallThrower : MonoBehaviour
         return throwPoint;
     }
 
-    public void ThrowABall(Vector3 throwVector, BallTarget target)
+    public void ThrowABall(Vector3 throwVector)
     {
-
-        if (ballPrefab == null)
-            return;
-
-        GameObject ballObject = Instantiate(ballPrefab, this.GetThrowPosition(), Quaternion.identity);
-        ballObject.layer = 9;
-
-        Ball ballToThrow = ballObject.GetComponent<Ball>();
+        Ball ballToThrow = _SpawnBall();
 
         if (ballToThrow == null)
             return;
 
-        ballToThrow.Throw(throwVector,target);
-        ballCollection.Add(ballToThrow);
+        ballToThrow.Throw(throwVector);
+        _allThrowsPerformed = false;
+        _ballCollection.Add(ballToThrow);
+    }
+    public VSDisct CollectBallsTrajecory(){
+        VSDisct ballData = new VSDisct();
+
+        for(int i = 0; i < _ballCollection.Count; i++)
+            ballData.vSDict.Add(i,new VS(_ballCollection[i].trajectory.ToArray()));
+
+        foreach (var ball in _ballCollection)
+            Destroy(ball);
+
+        _ballCollection = new List<Ball>();
+        return ballData;
     }
 
-    public void PerformaceSummary()
-    {
-        if (ballCollection.Count != throwCount)
-            return;
+    private Ball _SpawnBall(){
+        if (ballPrefab == null)
+            return null;
 
-        if (ballCollection.TrueForAll(b => b.HasThrowTimePass()))
-        {
-            float AveragePerformaceScore = 0;
-            ballCollection.ForEach(b => AveragePerformaceScore += (float)(b.GetPerformanceScore() / 10.0));
-            hasBallsPerformScoreCalculation = true;
-        }
+        GameObject ballObject = Instantiate(ballPrefab, this._GetThrowPosition(), Quaternion.identity);
+        ballObject.layer = 9;
+
+        return ballObject.GetComponent<Ball>();
+    }
+
+    private void _CheckingAllBallExpired()
+    {
+       _allThrowsPerformed = _ballCollection.TrueForAll(b => b.IsLiveTimeExpired());
     }
 
     void Update()
     {
-        if (!hasBallsPerformScoreCalculation)
-            PerformaceSummary();
+        _CheckingAllBallExpired();
     }
 }

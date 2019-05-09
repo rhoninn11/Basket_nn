@@ -14,11 +14,11 @@ public class ThrowerServiceEditor : Editor
 
         if (GUILayout.Button("Spawn Throwers"))
         {
-            editant.SpawnThrowers();
+            editant.CreateThrower();
         }
         if (GUILayout.Button("Throwing"))
         {
-            editant.ThrowingProccess();
+            // editant.ThrowingProccess();
         }
         
     }

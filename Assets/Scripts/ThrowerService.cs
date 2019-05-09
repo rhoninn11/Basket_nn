@@ -8,92 +8,68 @@ public class ThrowerService : MonoBehaviour
 {
     public int throwerCount;
     public BallThrower throwerPrefab;
-    public Material baseMaterial;
     public BallTarget throwerTarget;
-    private List<BallThrower> throwerList;
+    private BallThrower _thrower;
 
-    public void SpawnThrowers()
-    {
-        if (throwerList == null)
-            throwerList = new List<BallThrower>();
-
-        int throwerRemain = throwerList.Count - throwerCount;
-        for (int i = 0; i < 10; i++)
-        {
-
-            try
-            {
-                BallThrower thrower = SpawnThrower();
-                thrower.GetComponent<Renderer>().material = RandomColorMaterial();
-                throwerList.Add(thrower);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e.Message);
-            }
-        }
-    }
-
-    public Material RandomColorMaterial()
-    {
-        if (baseMaterial == null)
-            throw new Exception("there is no base material selected");
-
-        Material material = new Material(baseMaterial);
-        material.color = UnityEngine.Random.ColorHSV(0, 1);
-
-        return material;
-    }
+    private float _throwerExistingTime;
 
     public BallThrower SpawnThrower()
     {
         if (throwerPrefab == null)
             throw new Exception("there is no thrower prefab");
 
-        float xValue = UnityEngine.Random.Range(-4.0f, 4.0f);
-        float zValue = UnityEngine.Random.Range(-6.0f, 2.5f);
-        Vector3 position = new Vector3(xValue, 2, zValue);
+        Vector3 position = _NewThrowerPosition();
 
         return Instantiate<BallThrower>(throwerPrefab, position, Quaternion.identity);
     }
 
-    public string ReadThrowersData()
+    private Vector3 _NewThrowerPosition()
     {
-        var throwData = new List<VectorData>();
-
-        for (int i = 0; i < throwerList.Count; i++)
-        {
-
-            var throwPoint = throwerList[i].GetThrowPosition();
-
-            throwData.Add(new VectorData(throwPoint));
-        }
-
-        return JsonUtility.ToJson(new VectorDataCollection(throwData.ToArray()));
+        float xValue = UnityEngine.Random.Range(-4.0f, 4.0f);
+        float zValue = UnityEngine.Random.Range(-6.0f, 2.5f);
+        return new Vector3(xValue, 2, zValue);
     }
 
-    public void ThrowersBallThrow(VectorDataCollection data)
+    public string CollectTrajectoryData()
     {
+        VSDisct trajectories = _thrower.CollectBallsTrajecory();
 
-        int throwerCount = throwerList.Count;
-        if (data.vectors.Length != throwerCount)
-            return;
+        return JsonUtility.ToJson(trajectories);
+    }
 
-        for (int i = 0; i < throwerCount; i++)
-            throwerList[i].ThrowABall(data.vectors[i].vector, throwerTarget);
+    public void MoveThrowerOnTrajectory(float timeDelta)
+    {
+        _throwerExistingTime += timeDelta;
+        float f = 0.1f;
+        float omega = 2 * Mathf.PI * f;
+        int multipler = 2;
 
+        float xDelta = multipler * 2 * Mathf.Cos(omega * _throwerExistingTime) - _thrower.transform.position.x;
+        float zDelta = multipler * -Mathf.Sin(omega * _throwerExistingTime * 2) - _thrower.transform.position.z;
+        _thrower.transform.Translate(xDelta, 0, zDelta);
+    }
+
+    public void CreateThrower(){
+        if(_thrower != null)
+            Destroy(_thrower.gameObject);
+
+        _throwerExistingTime = 0;
+        _thrower = SpawnThrower();
     }
 
     public async void ThrowingProccess()
     {
-
-        string inputData = ReadThrowersData();
+        string inputData = CollectTrajectoryData();
         string command = "solve" + inputData;
 
         string outputJson = await GetComponent<AnnClient>().ServerCommand("solve" + inputData);
-        VectorDataCollection throwData = JsonUtility.FromJson<VectorDataCollection>(outputJson);
+        VS throwData = JsonUtility.FromJson<VS>(outputJson);
 
-        ThrowersBallThrow(throwData);
+    }
+
+    public void FixedUpdate(){
+        if(_thrower != null)
+            MoveThrowerOnTrajectory(Time.fixedDeltaTime);
     }
 
 

@@ -6,54 +6,34 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Ball : MonoBehaviour
 {
-    bool hasThrowTimePass = true;
-    DateTime startTimePoint;
-    float performenceScore = 0;
-    public int liveTimeinSeconds = 0;
-    private BallTarget target;
 
-    void Update()
+    bool liveTimeExpired = false;
+    DateTime startTimePoint;
+    public int liveTime = 0;
+
+    public List<V3> trajectory = new List<V3>();
+
+    void FixedUpdate()
     {
-        if (!hasThrowTimePass)
-            CheckPerformace(Time.deltaTime);
+        if(startTimePoint != null)
+            if(!IsLiveTimeExpired())
+                trajectory.Add(new V3(this.transform.position));
     }
 
-    public void Throw(Vector3 throwVector,BallTarget target)
+    public void Throw(Vector3 throwVector)
     {
-        this.target = target;
-
         GetComponent<Rigidbody>().AddForce(throwVector, ForceMode.Impulse);
         startTimePoint = DateTime.Now;
     }
 
-    public void CheckPerformace(float stepTime)
-    {
-        if (IsLiveTimeExpired())
-        {
-            hasThrowTimePass = true;
-            return;
-        }
-
-        if(target != null)
-            performenceScore += (target.GetTargetCords() - transform.position).magnitude * stepTime;
-    }
-
     public bool IsLiveTimeExpired()
     {
-        return (DateTime.Now - startTimePoint).Seconds > liveTimeinSeconds;
+        return (DateTime.Now - startTimePoint).Seconds > liveTime || liveTimeExpired;
     }
 
-    public void Hit()
+    public void HitHandle()
     {
-        performenceScore -= 5;
-        hasThrowTimePass = true;
+        liveTimeExpired = true;
     }
-    public bool HasThrowTimePass(){
-        return hasThrowTimePass;
-    }
-    public float GetPerformanceScore(){
-        return performenceScore;
-    }
-
 
 }

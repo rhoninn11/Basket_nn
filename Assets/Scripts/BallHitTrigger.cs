@@ -9,7 +9,7 @@ public class BallHitTrigger : MonoBehaviour
         Ball interuptor = (Ball)other.gameObject.GetComponent(typeof(Ball));
 
         if(interuptor != null){
-            interuptor.Hit();
+            interuptor.HitHandle();
             Debug.Log("Hit");
         }
     }
