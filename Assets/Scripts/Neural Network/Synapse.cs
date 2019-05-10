@@ -25,7 +25,7 @@ namespace Assets.Scripts.Neural_Network
         {
             get { return _weightsDelta; }
             set { _weightsDelta = value; }
-        }
+        }   
 
     }
 }
