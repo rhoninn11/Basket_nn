@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class NeuralNetworkModel : MonoBehaviour
 {
+    [SerializeField]
+    [Range(0, 1)] public double learningRate;
+    [SerializeField]
+    public double epochsCount;
+
     public Layer InputLayer { get; private set; }
     public Layer OutputLayer { get; private set; }
     public List<Layer> HiddenLayers { get; private set; }
 
-    [SerializeField]
-    [Range(0,1)]public double learningRate;
 
     public NeuralNetworkModel(int inputLayerSize, int hiddenLayerCount, int hiddenLayerSize)
     {
