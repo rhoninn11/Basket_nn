@@ -11,9 +11,7 @@ public class Layer : MonoBehaviour
     public Layer(string name, int size, double initialWeight)
     {
         Name = name; 
-
         SetNeuronsCount(size);
-
         Weight = initialWeight;
     }
 
