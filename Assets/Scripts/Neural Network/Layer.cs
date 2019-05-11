@@ -6,13 +6,11 @@ public class Layer : MonoBehaviour
 {
     public string Name { get; private set; }
     public List<Neuron> Neurons { get; private set; }
-    public double Weight { get; private set; }
 
-    public Layer(string name, int size, double initialWeight)
+    public Layer(string name, int size)
     {
         Name = name; 
         SetNeuronsCount(size);
-        Weight = initialWeight;
     }
 
     private void SetNeuronsCount(int size)
