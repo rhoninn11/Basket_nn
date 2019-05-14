@@ -11,7 +11,8 @@ namespace Assets.Scripts.Neural_Network
         void Train();
         void ForwardPropagation(Layer outputLayer, params double[] inputs);
         void BackPropagation(Layer outputLayer, params double[] targets);
+        double CalculateValue();
         double CalculateError(double value, double target);
-
+        double CalculateGradient(double? target = null);
     }
 }

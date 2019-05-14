@@ -15,6 +15,12 @@ public class NeuralNet : MonoBehaviour, INeuralNet
     public Layer OutputLayer { get; private set; }
     public List<Layer> HiddenLayers { get; private set; }
 
+    private List<Synapse> InputSynapses;
+    private List<Synapse> OutputSynapse;
+    private Output output = new Output();
+
+    public double Gradient { get; private set; }
+
     public NeuralNet(int inputLayerSize, int hiddenLayerCount, int hiddenLayerSize)
     {
         InputLayer = new Layer("Input Layer", inputLayerSize);
@@ -47,5 +53,16 @@ public class NeuralNet : MonoBehaviour, INeuralNet
     public void Train()
     {
         
+    }
+
+    public double CalculateValue()
+    {
+        return output.Sigmoid(InputSynapses.Sum(x => x.Weight * x.InputNeuron.Value));
+    }
+
+    public double CalculateGradient(double? target = null)
+    {
+       // return target == null ? Gradient = OutputSynapse.Sum(x => (x.OutputNeuron.Gradient * x.Weight) * output.Sigmoid(x.OutputNeuron.Value)) : Gradient = CalculateError(target.Value) * output.Derivative() ;
+        return 0.0;
     }
 }
