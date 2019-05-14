@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -118,7 +118,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh7176
+  m_Name: pb_Mesh-1116
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -272,6 +272,12 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!4 &89668660 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4256334824535505336, guid: e05cc8789d60fccf1819952941ca8f3b,
+    type: 3}
+  m_PrefabInstance: {fileID: 524630733}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -1808,13 +1814,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 361072371}
-  m_LocalRotation: {x: 0.07528181, y: 0.54341215, z: -0.013659199, w: 0.83597213}
-  m_LocalPosition: {x: -6.181, y: 3.505, z: 0.016}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 8.089001, y: 66.292, z: 3.4150002}
+  m_Father: {fileID: 89668660}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &361072375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1834,7 +1840,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh7124
+  m_Name: pb_Mesh-1124
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
@@ -2243,7 +2249,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-1096
+  m_Name: pb_Mesh-1118
   serializedVersion: 9
   m_SubMeshes:
   - serializedVersion: 2
