@@ -8,27 +8,29 @@ public class Ball : MonoBehaviour
 {
 
     bool liveTimeExpired = false;
-    DateTime startTimePoint;
-    public int liveTime = 0;
+    private float liveTime = -1;
+    public int maxLiveTime;
 
-    public List<V3> trajectory = new List<V3>();
+    public List<Vector3> trajectory = new List<Vector3>();
 
     void FixedUpdate()
     {
-        if(startTimePoint != null)
+        if(liveTime != -1){
+            liveTime += Time.fixedDeltaTime;
             if(!IsLiveTimeExpired())
-                trajectory.Add(new V3(this.transform.position));
+                trajectory.Add(this.transform.position);
+        }
     }
 
     public void Throw(Vector3 throwVector)
     {
         GetComponent<Rigidbody>().AddForce(throwVector, ForceMode.Impulse);
-        startTimePoint = DateTime.Now;
+        liveTime = 0;
     }
 
     public bool IsLiveTimeExpired()
     {
-        return (DateTime.Now - startTimePoint).Seconds > liveTime || liveTimeExpired;
+        return liveTime > maxLiveTime || liveTimeExpired;
     }
 
     public void HitHandle()

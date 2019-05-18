@@ -3,17 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AnnClient))]
 public class ThrowerService : MonoBehaviour
 {
     public int throwerCount;
     public BallThrower throwerPrefab;
-    public BallTarget throwerTarget;
     private BallThrower _thrower;
 
     private float _throwerExistingTime;
 
-    public BallThrower SpawnThrower()
+    private BallThrower _SpawnThrower()
     {
         if (throwerPrefab == null)
             throw new Exception("there is no thrower prefab");
@@ -30,16 +28,11 @@ public class ThrowerService : MonoBehaviour
         return new Vector3(xValue, 2, zValue);
     }
 
-    public string CollectTrajectoryData()
-    {
-        VSDisct trajectories = _thrower.CollectBallsTrajecory();
-
-        return JsonUtility.ToJson(trajectories);
-    }
-
-    public void MoveThrowerOnTrajectory(float timeDelta)
-    {
+    private void _UpdateThrowerTime(float timeDelta){
         _throwerExistingTime += timeDelta;
+    }
+    private void _MoveThrowerOnTrajectory()
+    {
         float f = 0.1f;
         float omega = 2 * Mathf.PI * f;
         int multipler = 2;
@@ -49,27 +42,29 @@ public class ThrowerService : MonoBehaviour
         _thrower.transform.Translate(xDelta, 0, zDelta);
     }
 
+    private void _ThrowingManagment(){
+        if(_thrower.IsReady()){
+            var elo = _thrower.CollectTrajecoryData();
+            Vector3 throwDirection = new Vector3(Mathf.Cos(_throwerExistingTime), 1 ,Mathf.Sin(_throwerExistingTime));
+            _thrower.DataGatteringThrow(throwDirection);
+        }
+    }
+
     public void CreateThrower(){
         if(_thrower != null)
             Destroy(_thrower.gameObject);
 
         _throwerExistingTime = 0;
-        _thrower = SpawnThrower();
-    }
-
-    public async void ThrowingProccess()
-    {
-        string inputData = CollectTrajectoryData();
-        string command = "solve" + inputData;
-
-        string outputJson = await GetComponent<AnnClient>().ServerCommand("solve" + inputData);
-        VS throwData = JsonUtility.FromJson<VS>(outputJson);
-
+        _thrower = _SpawnThrower();
+        Time.timeScale = 3;
     }
 
     public void FixedUpdate(){
-        if(_thrower != null)
-            MoveThrowerOnTrajectory(Time.fixedDeltaTime);
+        if(_thrower != null){
+            _UpdateThrowerTime(Time.fixedDeltaTime);
+            _MoveThrowerOnTrajectory();
+            _ThrowingManagment();
+        }
     }
 
 
