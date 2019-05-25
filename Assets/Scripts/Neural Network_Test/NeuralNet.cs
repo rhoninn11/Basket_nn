@@ -11,8 +11,6 @@ public class NeuralNet
     public List<List<Neuron>> HiddenLayers { get; set; }
     public List<Neuron> OutputLayer { get; set; }
 
-    private static readonly System.Random Random = new System.Random();
-
     public NeuralNet(int inputSize, int hiddenSize, int outputSize, int numHiddenLayers = 1, double? learnRate = null, double? momentum = null)
     {
         LearnRate = learnRate ?? .4;
@@ -35,7 +33,7 @@ public class NeuralNet
             OutputLayer.Add(new Neuron(HiddenLayers[numHiddenLayers - 1]));
     }
 
-    public void Train(List<DataSet> dataSets, int numEpochs)
+    public void Train(List<DataSets> dataSets, int numEpochs)
     {
         for (var i = 0; i < numEpochs; i++)
         {
@@ -47,7 +45,7 @@ public class NeuralNet
         }
     }
 
-    public void Train(List<DataSet> dataSets, double minimumError)
+    public void Train(List<DataSets> dataSets, double minimumError)
     {
         var error = 1.0;
         var numEpochs = 0;
@@ -66,7 +64,7 @@ public class NeuralNet
         }
     }
 
-    public void SingleTrain(DataSet dataSet){
+    public void SingleTrain(DataSets dataSet){
         ForwardPropagate(dataSet.Values);
         BackPropagate(dataSet.Targets);
     }
@@ -74,7 +72,7 @@ public class NeuralNet
     private void ForwardPropagate(params double[] inputs)
     {
         var i = 0;
-        InputLayer.ForEach(a => a.Value = inputs[i++]);
+        InputLayer.ForEach(a => a.Value = inputs[i++]); 
         foreach (var layer in HiddenLayers)
             layer.ForEach(a => a.CalculateValue());
         OutputLayer.ForEach(a => a.CalculateValue());
@@ -103,11 +101,6 @@ public class NeuralNet
     {
         var i = 0;
         return OutputLayer.Sum(a => Mathf.Abs((float)a.CalculateError(targets[i++])));
-    }
-
-    public static double GetRandom()
-    {
-        return 2 * Random.NextDouble() - 1;
     }
 }
 

@@ -24,7 +24,7 @@ public class AnnClient : MonoBehaviour
         {
             await ws.ConnectAsync(new Uri($"ws://localhost:{port}"), ct);
         }
-        catch (Exception e)
+        catch (Exception)
         {
             Debug.Log("connection problem");
             return null;

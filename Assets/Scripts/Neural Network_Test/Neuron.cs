@@ -5,18 +5,22 @@ using System.Linq;
 
 public class Neuron
 {
-    public List<Synapse> InputSynapses { get; set; }
-    public List<Synapse> OutputSynapses { get; set; }
-    public double Bias { get; set; }
-    public double BiasDelta { get; set; }
-    public double Gradient { get; set; }
+    public List<Synapse> InputSynapses { get; private set; }
+    public List<Synapse> OutputSynapses { get; private set; }
+    public double Bias { get; private set; }
+    public double BiasDelta { get; private set; }
+    public double Gradient { get; private set; }
     public double Value { get; set; }
+
+    private Sigmoid sigmoid = new Sigmoid();
 
     public Neuron()
     {
         InputSynapses = new List<Synapse>();
         OutputSynapses = new List<Synapse>();
-        Bias = NeuralNet.GetRandom();
+
+        var random = new System.Random();
+        Bias = 2 * random.NextDouble() - 1;
     }
 
     public Neuron(IEnumerable<Neuron> inputNeurons) : this()
@@ -31,7 +35,7 @@ public class Neuron
 
     public virtual double CalculateValue()
     {
-        return Value = Sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
+        return Value = sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
     }
 
     public double CalculateError(double target)
@@ -41,64 +45,23 @@ public class Neuron
 
     public double CalculateGradient(double? target = null)
     {
-        if (target == null)
-            return Gradient = OutputSynapses.Sum(a => a.OutputNeuron.Gradient * a.Weight) * Sigmoid.Derivative(Value);
-
-        return Gradient = CalculateError(target.Value) * Sigmoid.Derivative(Value);
+        return target == null
+            ? (Gradient = OutputSynapses.Sum(a => a.OutputNeuron.Gradient * a.Weight) * sigmoid.Derivative(Value))
+            : (Gradient = CalculateError(target.Value) * sigmoid.Derivative(Value));
     }
 
-    public void UpdateWeights(double learnRate, double momentum)
+    public void UpdateWeights(double learningRate, double momentum)
     {
         var prevDelta = BiasDelta;
-        BiasDelta = learnRate * Gradient;
+        BiasDelta = learningRate * Gradient;
         Bias += BiasDelta + momentum * prevDelta;
 
         foreach (var synapse in InputSynapses)
         {
             prevDelta = synapse.WeightDelta;
-            synapse.WeightDelta = learnRate * Gradient * synapse.InputNeuron.Value;
+            synapse.WeightDelta = learningRate * Gradient * synapse.InputNeuron.Value;
             synapse.Weight += synapse.WeightDelta + momentum * prevDelta;
         }
     }
 
-}
-
-public class Synapse
-{
-    public Neuron InputNeuron { get; set; }
-    public Neuron OutputNeuron { get; set; }
-    public double Weight { get; set; }
-    public double WeightDelta { get; set; }
-
-    public Synapse(Neuron inputNeuron, Neuron outputNeuron)
-    {
-        InputNeuron = inputNeuron;
-        OutputNeuron = outputNeuron;
-        Weight = NeuralNet.GetRandom();
-    }
-}
-
-public static class Sigmoid
-{
-    public static double Output(double x)
-    {
-        return x < -45.0 ? 0.0 : x > 45.0 ? 1.0 : 1.0 / (1.0 + Mathf.Exp((float)-x));
-    }
-
-    public static double Derivative(double x)
-    {
-        return x * (1 - x);
-    }
-}
-
-public class DataSet
-{
-    public double[] Values { get; set; }
-    public double[] Targets { get; set; }
-
-    public DataSet(double[] values, double[] targets)
-    {
-        Values = values;
-        Targets = targets;
-    }
 }
