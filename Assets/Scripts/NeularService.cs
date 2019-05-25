@@ -42,7 +42,7 @@ public class NeularService : MonoBehaviour
 
         double[] values = { throwPosition.x, throwPosition.y, throwPosition.z, targetPosition.x, targetPosition.y, targetPosition.z };
         double[] target = { directionToLern.x, directionToLern.y, directionToLern.z };
-        _net.SingleTrain(new DataSet(values,target));
+        _net.SingleTrain(new DataSets(values,target));
         Debug.Log("adaptation");
     }
 }
