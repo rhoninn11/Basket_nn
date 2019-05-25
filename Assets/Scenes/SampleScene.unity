@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657868, g: 0.49641263, b: 0.57481706, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1749,7 +1749,6 @@ GameObject:
   - component: {fileID: 361072374}
   - component: {fileID: 361072373}
   - component: {fileID: 361072372}
-  - component: {fileID: 361072375}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -1821,19 +1820,6 @@ Transform:
   m_Father: {fileID: 89668660}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &361072375
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 361072371}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd1433065c88ecb77a93e8fe52210ce5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cd: {fileID: 0}
 --- !u!43 &377407755
 Mesh:
   m_ObjectHideFlags: 0
@@ -2403,6 +2389,26 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &2073220318 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4256334824535505281, guid: e05cc8789d60fccf1819952941ca8f3b,
+    type: 3}
+  m_PrefabInstance: {fileID: 524630733}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2073220319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073220318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01202a32b0c86e74dab42357acbf4474, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraSensitivity: 90
+  movementSpeed: 10
 --- !u!1 &2081495009
 GameObject:
   m_ObjectHideFlags: 0
@@ -2449,6 +2455,9 @@ MonoBehaviour:
   throwerCount: 10
   throwerPrefab: {fileID: 2716229092494583824, guid: 1e7b724f31212fb31a9937cc65020c8e,
     type: 3}
+  target: {fileID: 0}
+  dataProcessor: {fileID: 0}
+  neuralService: {fileID: 0}
 --- !u!1001 &7001548036306012284
 PrefabInstance:
   m_ObjectHideFlags: 0

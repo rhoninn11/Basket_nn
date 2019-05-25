@@ -5,25 +5,25 @@ using UnityEngine;
 [RequireComponent(typeof(BallThrower))]
 public class Player : MonoBehaviour
 {
-    public float speed = 0.11f;
+    //public float speed = 0.11f;
     public float throwForce = 5;
     BallTarget target;
 
     // Update is called once per frame
     void Update()
     {
-        Walk();
+        //Walk();
         PerformThrow();
     }
 
-    void Walk()
-    {
-        float horizontalDelta = Input.GetAxis("Horizontal") * speed;
-        float verticalDelta = Input.GetAxis("Vertical") * speed;
+    //void Walk()
+    //{
+    //    float horizontalDelta = Input.GetAxis("Horizontal") * speed;
+    //    float verticalDelta = Input.GetAxis("Vertical") * speed;
 
-        Vector3 positionDelta = new Vector3(horizontalDelta, 0, verticalDelta);
-        this.transform.Translate(positionDelta);
-    }
+    //    Vector3 positionDelta = new Vector3(horizontalDelta, 0, verticalDelta);
+    //    this.transform.Translate(positionDelta);
+    //}
 
     void PerformThrow()
     {
