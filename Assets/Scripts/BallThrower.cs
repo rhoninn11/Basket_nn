@@ -11,7 +11,7 @@ public class BallThrower : MonoBehaviour
     private List<Vector3> _directionBuffer = new List<Vector3>();
     private bool _ready = false;
 
-    private Vector3 _GetThrowPosition()
+    public Vector3 GetThrowPosition()
     {
         Vector3 heightOffset = new Vector3(0, 0.94f, 0);
         Vector3 throwPoint = this.transform.position + heightOffset;
@@ -24,7 +24,7 @@ public class BallThrower : MonoBehaviour
         if (ballPrefab == null)
             return null;
 
-        GameObject ballObject = Instantiate(ballPrefab, this._GetThrowPosition(), Quaternion.identity);
+        GameObject ballObject = Instantiate(ballPrefab, this.GetThrowPosition(), Quaternion.identity);
         ballObject.layer = 9;
 
         return ballObject.GetComponent<Ball>();

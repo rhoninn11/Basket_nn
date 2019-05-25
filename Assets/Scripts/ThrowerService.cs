@@ -7,9 +7,16 @@ public class ThrowerService : MonoBehaviour
 {
     public int throwerCount;
     public BallThrower throwerPrefab;
-    private BallThrower _thrower;
+    public BallTarget target;
+    public DataProcessor dataProcessor;
+    public NeularService neuralService;
 
+
+    private BallThrower _thrower;
     private float _throwerExistingTime;
+    public Vector3 LastThrowDirection { get; set;}
+    private Vector3 _lastThrowPosition;
+    private bool _first = true;
 
     private BallThrower _SpawnThrower()
     {
@@ -28,7 +35,8 @@ public class ThrowerService : MonoBehaviour
         return new Vector3(xValue, 2, zValue);
     }
 
-    private void _UpdateThrowerTime(float timeDelta){
+    private void _UpdateThrowerTime(float timeDelta)
+    {
         _throwerExistingTime += timeDelta;
     }
     private void _MoveThrowerOnTrajectory()
@@ -42,16 +50,30 @@ public class ThrowerService : MonoBehaviour
         _thrower.transform.Translate(xDelta, 0, zDelta);
     }
 
-    private void _ThrowingManagment(){
-        if(_thrower.IsReady()){
-            var elo = _thrower.CollectTrajecoryData();
-            Vector3 throwDirection = new Vector3(Mathf.Cos(_throwerExistingTime), 1 ,Mathf.Sin(_throwerExistingTime));
+    private void _ThrowingManagment()
+    {
+        if (_thrower.IsReady())
+        {
+            List<TrajectoryData> collectedData = _thrower.CollectTrajecoryData();
+
+            if (collectedData.Count > 0)
+            {
+                Vector3 directionToLern = dataProcessor.findOptimalThrowDirection(collectedData, target, LastThrowDirection);
+                if (!_first)
+                    neuralService.NetAdaptation(LastThrowDirection, target.GetTargetCords(), directionToLern);
+            }
+            Vector3 throwPosition = _thrower.GetThrowPosition();
+            Vector3 throwDirection = neuralService.CalculateThrowDirection(throwPosition, target.GetTargetCords());
             _thrower.DataGatteringThrow(throwDirection);
+            LastThrowDirection = throwDirection;
+            _lastThrowPosition = throwPosition;
+            _first = false;
         }
     }
 
-    public void CreateThrower(){
-        if(_thrower != null)
+    public void CreateThrower()
+    {
+        if (_thrower != null)
             Destroy(_thrower.gameObject);
 
         _throwerExistingTime = 0;
@@ -59,10 +81,12 @@ public class ThrowerService : MonoBehaviour
         Time.timeScale = 3;
     }
 
-    public void FixedUpdate(){
-        if(_thrower != null){
+    public void FixedUpdate()
+    {
+        if (_thrower != null)
+        {
             _UpdateThrowerTime(Time.fixedDeltaTime);
-            _MoveThrowerOnTrajectory();
+            //_MoveThrowerOnTrajectory();
             _ThrowingManagment();
         }
     }

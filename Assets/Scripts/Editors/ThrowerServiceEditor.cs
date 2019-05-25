@@ -10,16 +10,12 @@ public class ThrowerServiceEditor : Editor
     {
 
         DrawDefaultInspector();
-        ThrowerService editant = ((ThrowerService)this.target);
-
+        ThrowerService service = ((ThrowerService)this.target);
+        var dir = service.LastThrowDirection;
+        EditorGUILayout.LabelField("last direction", $"x:{dir.x}, y:{dir.y}, z:{dir.z}");
         if (GUILayout.Button("Spawn Throwers"))
         {
-            editant.CreateThrower();
-        }
-        if (GUILayout.Button("Throwing"))
-        {
-            // editant.ThrowingProccess();
-        }
-        
+            service.CreateThrower();
+        }     
     }
 }
