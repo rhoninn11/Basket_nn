@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class BallThrower : MonoBehaviour
 {
-    // Start is called before the first frame update
-    public GameObject ballPrefab;
+    public BallPooler pooler;
     private List<Ball> _ballCollection = new List<Ball>();
     private List<Vector3> _directionBuffer = new List<Vector3>();
     private bool _ready = false;
@@ -21,13 +20,11 @@ public class BallThrower : MonoBehaviour
 
     private Ball _SpawnBall()
     {
-        if (ballPrefab == null)
+        if (pooler == null)
             return null;
 
-        GameObject ballObject = Instantiate(ballPrefab, this.GetThrowPosition(), Quaternion.identity);
-        ballObject.layer = 9;
-
-        return ballObject.GetComponent<Ball>();
+        Ball ball = pooler.GetBallFromPool(this.GetThrowPosition(), Quaternion.identity, 9);
+        return ball;
     }
 
     private void _CheckingAllBallExpired()
@@ -40,17 +37,22 @@ public class BallThrower : MonoBehaviour
         _CheckingAllBallExpired();
     }
 
-    public void DataGatteringThrow(Vector3 direction)
+    public void DataGatteringThrow(Vector3 direction,float deviation)
     {
-        if(!_ready)
+        if (!_ready)
             return;
 
-        float deviation = 0.37f;
-     
-        for (int i = 0; i < 3; i++)
-            for (int jj = 0; jj < 3; jj++)
-                for (int kkk = 0; kkk < 3; kkk++){
-                    Vector3 dir = direction + new Vector3(deviation * i, deviation * jj, deviation * kkk);
+        int perAxisAlternative = 3;
+        int offset = -1;
+
+        for (int i = 0; i < perAxisAlternative; i++)
+            for (int jj = 0; jj < perAxisAlternative; jj++)
+                for (int kkk = 0; kkk < perAxisAlternative; kkk++)
+                {
+                    float xDir = Mathf.Max(-1, Mathf.Min(direction.x + deviation * (i + offset), 1));
+                    float yDir = Mathf.Max(-1, Mathf.Min(direction.y + deviation * (jj + offset), 1));
+                    float zDir = Mathf.Max(-1, Mathf.Min(direction.z + deviation * (kkk + offset), 1));
+                    Vector3 dir = new Vector3(xDir, yDir, zDir);
                     _directionBuffer.Add(dir);
                     ThrowABall(dir);
                 }
@@ -69,24 +71,26 @@ public class BallThrower : MonoBehaviour
     }
     public List<TrajectoryData> CollectTrajecoryData()
     {
-        if(!_ready)
+        if (!_ready)
             return null;
-            
+
         List<TrajectoryData> ballData = new List<TrajectoryData>();
 
-        for (int i = 0; i < _ballCollection.Count; i++)
-            ballData.Add(new TrajectoryData(_directionBuffer[i],
-                                            _ballCollection[i].trajectory));
+        int i = 0;
+        _ballCollection.ForEach(b => ballData.Add(new TrajectoryData(_directionBuffer[i++],b.trajectory)));
 
-        foreach (var ball in _ballCollection)
-            Destroy(ball.gameObject);
+        _ballCollection.ForEach(b =>{
+            b.gameObject.SetActive(false);
+            b.Refresh();
+        });
 
-        _ballCollection = new List<Ball>();
-        _directionBuffer = new List<Vector3>();
+        _ballCollection.Clear();
+        _directionBuffer.Clear();
         return ballData;
     }
 
-    public bool IsReady(){
+    public bool IsReady()
+    {
         return _ready;
     }
 }

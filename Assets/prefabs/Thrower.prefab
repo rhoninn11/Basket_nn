@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1506100327005852096}
   - component: {fileID: 8689596346791125421}
   - component: {fileID: 2716229092494583824}
+  - component: {fileID: 3646559281319870806}
   m_Layer: 9
   m_Name: Thrower
   m_TagString: Untagged
@@ -121,5 +122,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3649a3615671884a080a4cc043071f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballPrefab: {fileID: 7361139351119191099, guid: 432faa6bde6bef751bcffb7f84d52b15,
-    type: 3}
+  pooler: {fileID: 3646559281319870806}
+--- !u!114 &3646559281319870806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8210564980569183409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22ce3d1b9e4d2164ebe8c473311051fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  poolSize: 27
+  prefab: {fileID: 7361139351119191099, guid: 432faa6bde6bef751bcffb7f84d52b15, type: 3}

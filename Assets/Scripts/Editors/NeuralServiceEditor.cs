@@ -8,6 +8,7 @@ public class NeuralServiceEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        DrawDefaultInspector();
         NeularService service = ((NeularService)this.target);
 
         if (GUILayout.Button("populate new neural network"))

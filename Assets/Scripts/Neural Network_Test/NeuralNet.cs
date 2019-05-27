@@ -64,15 +64,25 @@ public class NeuralNet
         }
     }
 
-    public void SingleTrain(DataSets dataSet){
+    public void SingleTrain(DataSets dataSet)
+    {
         ForwardPropagate(dataSet.Values);
         BackPropagate(dataSet.Targets);
+    }
+
+    public void TrainForSingleDataset(DataSets dataSet, int epochs)
+    {
+        for (var i = 0; i < epochs; i++)
+        {
+            ForwardPropagate(dataSet.Values);
+            BackPropagate(dataSet.Targets);
+        }
     }
 
     private void ForwardPropagate(params double[] inputs)
     {
         var i = 0;
-        InputLayer.ForEach(a => a.Value = inputs[i++]); 
+        InputLayer.ForEach(a => a.Value = inputs[i++]);
         foreach (var layer in HiddenLayers)
             layer.ForEach(a => a.CalculateValue());
         OutputLayer.ForEach(a => a.CalculateValue());
@@ -85,9 +95,8 @@ public class NeuralNet
         foreach (var layer in HiddenLayers.AsEnumerable<List<Neuron>>().Reverse())
         {
             layer.ForEach(a => a.CalculateGradient());
-            layer.ForEach(a => a.UpdateWeights(LearnRate, Momentum));
         }
-        HiddenLayers.ForEach(hl => hl.ForEach(n => n.UpdateWeights(LearnRate,Momentum)));
+        HiddenLayers.ForEach(hl => hl.ForEach(n => n.UpdateWeights(LearnRate, Momentum)));
         OutputLayer.ForEach(a => a.UpdateWeights(LearnRate, Momentum));
     }
 

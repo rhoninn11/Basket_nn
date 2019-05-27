@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sigmoid : MonoBehaviour
+public class Sigmoid
 {
     public double Output(double x)
     {

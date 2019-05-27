@@ -24,9 +24,11 @@ public class Ball : MonoBehaviour
         }
     }
 
-    public void Throw(Vector3 throwVector)
-    {
-        GetComponent<Rigidbody>().AddForce(throwVector * forceFactor, ForceMode.Impulse);
+    public void Throw(Vector3 throwDirection)
+    {   
+        Rigidbody brb = GetComponent<Rigidbody>();
+        brb.velocity = Vector3.zero;
+        brb.AddForce(throwDirection * forceFactor, ForceMode.Impulse);
         liveTime = 0;
     }
 
@@ -38,6 +40,12 @@ public class Ball : MonoBehaviour
     public void HitHandle()
     {
         liveTimeExpired = true;
+    }
+
+    public void Refresh(){
+        liveTimeExpired = false;
+        liveTime = -1;
+        trajectory = new List<Vector3>();
     }
 
 }

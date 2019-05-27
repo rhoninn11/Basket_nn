@@ -14717,7 +14717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxLiveTime: 5
-  forceFactor: 2
+  forceFactor: 12
   trajectory: []
 --- !u!54 &7361139351119191100
 Rigidbody:

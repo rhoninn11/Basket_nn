@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Synapse : MonoBehaviour
+public class Synapse
 {
     public Neuron InputNeuron { get; private set; }
     public Neuron OutputNeuron { get; private set; }

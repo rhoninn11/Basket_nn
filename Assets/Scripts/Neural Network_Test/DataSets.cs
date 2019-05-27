@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DataSets : MonoBehaviour
+public class DataSets
 {
     public double[] Values { get; set; }
     public double[] Targets { get; set; }

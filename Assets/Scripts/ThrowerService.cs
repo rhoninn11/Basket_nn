@@ -5,18 +5,23 @@ using UnityEngine;
 
 public class ThrowerService : MonoBehaviour
 {
-    public int throwerCount;
     public BallThrower throwerPrefab;
     public BallTarget target;
     public DataProcessor dataProcessor;
     public NeularService neuralService;
+    
+    [Range(0.1f,10)]
+    public float timeScale = 1;
 
 
     private BallThrower _thrower;
     private float _throwerExistingTime;
-    public Vector3 LastThrowDirection { get; set;}
+    public Vector3 LastThrowDirection { get; set; }
     private Vector3 _lastThrowPosition;
     private bool _first = true;
+
+    [Range(0.001f,0.5f)]
+    public float _deviationFactor;
 
     private BallThrower _SpawnThrower()
     {
@@ -64,7 +69,7 @@ public class ThrowerService : MonoBehaviour
             }
             Vector3 throwPosition = _thrower.GetThrowPosition();
             Vector3 throwDirection = neuralService.CalculateThrowDirection(throwPosition, target.GetTargetCords());
-            _thrower.DataGatteringThrow(throwDirection);
+            _thrower.DataGatteringThrow(throwDirection, _deviationFactor);
             LastThrowDirection = throwDirection;
             _lastThrowPosition = throwPosition;
             _first = false;
@@ -77,8 +82,10 @@ public class ThrowerService : MonoBehaviour
             Destroy(_thrower.gameObject);
 
         _throwerExistingTime = 0;
+        _deviationFactor = 0.1f;
         _thrower = _SpawnThrower();
-        Time.timeScale = 3;
+        dataProcessor.theHighestPerformaceAchived = 1000;
+        Time.timeScale = timeScale;
     }
 
     public void FixedUpdate()

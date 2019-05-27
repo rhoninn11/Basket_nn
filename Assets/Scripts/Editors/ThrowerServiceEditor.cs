@@ -16,6 +16,9 @@ public class ThrowerServiceEditor : Editor
         if (GUILayout.Button("Spawn Throwers"))
         {
             service.CreateThrower();
-        }     
+        } 
+        if (GUILayout.Button("Applay new timesacale")){
+            Time.timeScale = service.timeScale;
+        }    
     }
 }

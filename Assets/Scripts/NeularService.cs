@@ -7,10 +7,18 @@ using UnityEngine;
 public class NeularService : MonoBehaviour
 {
     private NeuralNet _net;
+    private Vector3 lastDirectionToLern;
+    private int duplicationTimes = 0;
+
+    [Range(1,5)]
+    public int hiddenLayersCount = 1;
+
+    [Range(3,20)]
+    public int hiddenLayerSize = 6;
 
     public void PopulateNeuralNetwork()
     {
-        _net = new NeuralNet(6, 12, 3, 4, 0.33, 0.6);
+        _net = new NeuralNet(6, hiddenLayerSize, 3, hiddenLayerSize, 0.33, 0.9);
     }
 
     public void SaveNeuralNetwork()
@@ -42,7 +50,17 @@ public class NeularService : MonoBehaviour
 
         double[] values = { throwPosition.x, throwPosition.y, throwPosition.z, targetPosition.x, targetPosition.y, targetPosition.z };
         double[] target = { directionToLern.x, directionToLern.y, directionToLern.z };
+
+        if(directionToLern == lastDirectionToLern){
+            if(++duplicationTimes > 5){
+                duplicationTimes = 0;
+                _net.TrainForSingleDataset(new DataSets(values,target),100);
+                Debug.Log("Focusedlearning");
+                return;
+
+            }
+        }
         _net.SingleTrain(new DataSets(values,target));
-        Debug.Log("adaptation");
+        lastDirectionToLern = directionToLern;
     }
 }

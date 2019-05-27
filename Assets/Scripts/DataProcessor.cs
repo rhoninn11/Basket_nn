@@ -7,6 +7,8 @@ public class DataProcessor : MonoBehaviour
     public float theHighestPerformanceIndex;
     public float throwPerformanceIndex;
     public float theLowestPerformanceIndex;
+    public float theHighestPerformaceAchived;
+    public Vector3 ultimateDirection;
 
     public Vector3 findOptimalThrowDirection(List<TrajectoryData> trajectoryList, BallTarget target, Vector3 throwDirection)
     {
@@ -17,11 +19,8 @@ public class DataProcessor : MonoBehaviour
         foreach (var trajectory in trajectoryList)
         {
             float performanceIndex = 0;
-
-            foreach (var point in trajectory.trajectoryPoints)
-            {
-                performanceIndex += Vector3.Distance(point, targetPosition) * Time.fixedDeltaTime;
-            }
+            
+            trajectory.trajectoryPoints.ForEach(p => performanceIndex += Vector3.Distance(p, targetPosition) * Time.fixedDeltaTime);
 
             if (trajectory.direction == throwDirection)
             {
@@ -45,7 +44,12 @@ public class DataProcessor : MonoBehaviour
                 theLowestPerformanceIndex = performanceIndex;
         }
 
-        return optimalDirection;
+        if(theHighestPerformanceIndex < theHighestPerformaceAchived){
+            theHighestPerformaceAchived = theHighestPerformanceIndex;
+            ultimateDirection  = optimalDirection;
+        }
+
+        return ultimateDirection;
     }
 
 
