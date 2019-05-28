@@ -5,24 +5,47 @@ using UnityEngine.UI;
 
 public class UIDataSetter : MonoBehaviour
 {
-    [Header("Player Settings")]
-    public Text Position;
-    public InputField Force;
+    public Slider HiddenLayersCount;
+    public Slider HiddenLayersSize;
+    public Slider TimeScale;
+    public Slider DeviationFactor;
 
-    [SerializeField] GameObject Player;
+    public Text ThrowPerformance;
+    public Text HighestPerformance;
+    public Text LowestPerformance;
+    public Text GoalPerformance;
+    public Text GoalDirection;
 
-    //[Header("Naural Network Settings")]
+    public ThrowerService throwerService;
+    public DataProcessor dataProcessor;
+    public NeularService neuralService;
 
     private void Update()
     {
-        SetPlayerData();
+        SetSliderValues();
+        SetTextValues();
     }
 
-    private void SetPlayerData()
+    private void SetTextValues()
     {
-        var posX = Player.transform.localPosition.x;
-        var posY = Player.transform.localPosition.y;
-        var posZ = Player.transform.localPosition.z;
-        Position.text = $"Position: X: {posX:00.00}, Y: {posY:00.00}, Z: {posZ:00.00}";
+        ThrowPerformance.text = $"Throw Performance: {dataProcessor.throwPerformanceIndex:0.000}";
+        HighestPerformance.text = $"The Highest Performance: {dataProcessor.theHighestPerformanceIndex:0.000}";
+        LowestPerformance.text = $"The Lowest Performance: {dataProcessor.theLowestPerformanceIndex:0.000}";
+        GoalPerformance.text = $"Goal performance: {dataProcessor.theHighestPerformaceAchived:0.000}";
+        GoalDirection.text = $"Goal Direction: X: {dataProcessor.ultimateDirection.x:0.000} Y: {dataProcessor.ultimateDirection.y:0.00} Z: {dataProcessor.ultimateDirection.z:0.00}";
+    }
+
+    private void SetSliderValues()
+    {
+        HiddenLayersCount.onValueChanged.AddListener(delegate { neuralService.hiddenLayersCount = (int)HiddenLayersCount.value; });
+        HiddenLayersSize.onValueChanged.AddListener(delegate { neuralService.hiddenLayerSize = (int)HiddenLayersSize.value; });
+
+        TimeScale.onValueChanged.AddListener(delegate { throwerService.timeScale = (int)TimeScale.value; });
+        DeviationFactor.onValueChanged.AddListener(delegate { throwerService._deviationFactor = (int)DeviationFactor.value; });
+    }
+
+    public void CancelApplication()
+    {
+        Application.Quit();
     }
 }
