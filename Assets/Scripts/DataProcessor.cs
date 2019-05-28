@@ -5,48 +5,62 @@ using UnityEngine;
 public class DataProcessor : MonoBehaviour
 {
     public float theHighestPerformanceIndex;
+    public float theNearestBasketDistance;
     public float throwPerformanceIndex;
     public float theLowestPerformanceIndex;
     public float theHighestPerformaceAchived;
     public Vector3 ultimateDirection;
 
-    public Vector3 findOptimalThrowDirection(List<TrajectoryData> trajectoryList, BallTarget target, Vector3 throwDirection)
+    public Vector3 findOptimalThrowDirection(List<TrajectoryData> trajectoryList, BallTarget target, Vector3 throwDirection, out float throwDistance)
     {
         Vector3 targetPosition = target.GetTargetCords();
         Vector3 optimalDirection = Vector3.zero;
+        throwDistance = 0;
         bool first = true;
 
         foreach (var trajectory in trajectoryList)
         {
             float performanceIndex = 0;
-            
-            trajectory.trajectoryPoints.ForEach(p => performanceIndex += Vector3.Distance(p, targetPosition) * Time.fixedDeltaTime);
+            float minialDistance = 1000;
+
+            trajectory.trajectoryPoints.ForEach(p =>
+            {
+                var distToTarget = Vector3.Distance(p, targetPosition);
+                minialDistance = Mathf.Min(distToTarget, minialDistance);
+                performanceIndex += distToTarget * Time.fixedDeltaTime;
+            });
 
             if (trajectory.direction == throwDirection)
             {
                 throwPerformanceIndex = performanceIndex;
+                throwDistance = minialDistance;
                 continue;
             }
 
-            if(first){
+            if (first)
+            {
                 first = false;
                 theHighestPerformanceIndex = performanceIndex;
                 theLowestPerformanceIndex = performanceIndex;
                 continue;
             }
 
-            if(performanceIndex < theHighestPerformanceIndex){
+            if (performanceIndex < theHighestPerformanceIndex)
+            {
                 theHighestPerformanceIndex = performanceIndex;
+                theNearestBasketDistance = minialDistance;
                 optimalDirection = trajectory.direction;
             }
 
-            if(performanceIndex > theLowestPerformanceIndex)
+            if (performanceIndex > theLowestPerformanceIndex)
                 theLowestPerformanceIndex = performanceIndex;
         }
 
-        if(theHighestPerformanceIndex < theHighestPerformaceAchived){
+        Debug.Log($"{theHighestPerformanceIndex}, {theNearestBasketDistance}");
+        if (theHighestPerformanceIndex < theHighestPerformaceAchived)
+        {
             theHighestPerformaceAchived = theHighestPerformanceIndex;
-            ultimateDirection  = optimalDirection;
+            ultimateDirection = optimalDirection;
         }
 
         return ultimateDirection;

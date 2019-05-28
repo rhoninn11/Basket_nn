@@ -48,17 +48,19 @@ public class BallThrower : MonoBehaviour
         for (int i = 0; i < perAxisAlternative; i++)
             for (int jj = 0; jj < perAxisAlternative; jj++)
                 for (int kkk = 0; kkk < perAxisAlternative; kkk++)
-                {
+                {   
                     float xDir = Mathf.Max(-1, Mathf.Min(direction.x + deviation * (i + offset), 1));
                     float yDir = Mathf.Max(-1, Mathf.Min(direction.y + deviation * (jj + offset), 1));
                     float zDir = Mathf.Max(-1, Mathf.Min(direction.z + deviation * (kkk + offset), 1));
+
                     Vector3 dir = new Vector3(xDir, yDir, zDir);
                     _directionBuffer.Add(dir);
-                    ThrowABall(dir);
+
+                    ThrowABall(dir, dir == direction);
                 }
     }
 
-    public void ThrowABall(Vector3 throwVector)
+    public void ThrowABall(Vector3 throwVector, bool colored)
     {
         Ball ballToThrow = _SpawnBall();
 
@@ -67,7 +69,7 @@ public class BallThrower : MonoBehaviour
 
         _ready = false;
         _ballCollection.Add(ballToThrow);
-        ballToThrow.Throw(throwVector);
+        ballToThrow.Throw(throwVector,colored);
     }
     public List<TrajectoryData> CollectTrajecoryData()
     {

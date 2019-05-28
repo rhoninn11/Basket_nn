@@ -12,8 +12,6 @@ public class Neuron
     public double Gradient { get; private set; }
     public double Value { get; set; }
 
-    private Sigmoid sigmoid = new Sigmoid();
-
     public Neuron()
     {
         InputSynapses = new List<Synapse>();
@@ -35,7 +33,7 @@ public class Neuron
 
     public virtual double CalculateValue()
     {
-        return Value = sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
+        return Value = Sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
     }
 
     public double CalculateError(double target)
@@ -46,8 +44,8 @@ public class Neuron
     public double CalculateGradient(double? target = null)
     {
         return target == null
-            ? (Gradient = OutputSynapses.Sum(a => a.OutputNeuron.Gradient * a.Weight) * sigmoid.Derivative(Value))
-            : (Gradient = CalculateError(target.Value) * sigmoid.Derivative(Value));
+            ? (Gradient = OutputSynapses.Sum(a => a.OutputNeuron.Gradient * a.Weight) * Sigmoid.Derivative(Value))
+            : (Gradient = CalculateError(target.Value) * Sigmoid.Derivative(Value));
     }
 
     public void UpdateWeights(double learningRate, double momentum)

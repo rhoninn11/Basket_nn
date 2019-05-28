@@ -24,11 +24,12 @@ public class Ball : MonoBehaviour
         }
     }
 
-    public void Throw(Vector3 throwDirection)
+    public void Throw(Vector3 throwDirection, bool colored)
     {   
         Rigidbody brb = GetComponent<Rigidbody>();
         brb.velocity = Vector3.zero;
         brb.AddForce(throwDirection * forceFactor, ForceMode.Impulse);
+        GetComponent<MeshRenderer>().material.color = colored ? new Color(1, 0.5f, 0.5f) : Color.white;
         liveTime = 0;
     }
 

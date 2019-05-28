@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     void PerformThrow()
     {
         if (Input.GetAxis("Jump") == 1)
-            GetComponent<BallThrower>().ThrowABall(new Vector3(0, 1, 1).normalized * throwForce);
+            GetComponent<BallThrower>().ThrowABall(new Vector3(0, 1, 1).normalized * throwForce, false);
     }
 
 }

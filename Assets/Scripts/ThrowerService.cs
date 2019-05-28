@@ -9,8 +9,8 @@ public class ThrowerService : MonoBehaviour
     public BallTarget target;
     public DataProcessor dataProcessor;
     public NeularService neuralService;
-    
-    [Range(0.1f,10)]
+
+    [Range(0.1f, 10)]
     public float timeScale = 1;
 
 
@@ -20,7 +20,8 @@ public class ThrowerService : MonoBehaviour
     private Vector3 _lastThrowPosition;
     private bool _first = true;
 
-    [Range(0.001f,0.5f)]
+
+    [Range(0.001f, 0.5f)]
     public float _deviationFactor;
 
     private BallThrower _SpawnThrower()
@@ -63,14 +64,23 @@ public class ThrowerService : MonoBehaviour
 
             if (collectedData.Count > 0)
             {
-                Vector3 directionToLern = dataProcessor.findOptimalThrowDirection(collectedData, target, LastThrowDirection);
+                float throwDistance;
+                var directionToLern = dataProcessor.findOptimalThrowDirection(collectedData, target, LastThrowDirection, out throwDistance);
+
+                _deviationFactor = (float)Sigmoid.Output((double)throwDistance*0.5 - 1) * 0.1f;
+                
+                var ppDirToLern = (directionToLern + Vector3.one) * 0.5f;
+
                 if (!_first)
-                    neuralService.NetAdaptation(LastThrowDirection, target.GetTargetCords(), directionToLern);
+                    neuralService.NetAdaptation(_lastThrowPosition, target.GetTargetCords(), ppDirToLern);
             }
-            Vector3 throwPosition = _thrower.GetThrowPosition();
-            Vector3 throwDirection = neuralService.CalculateThrowDirection(throwPosition, target.GetTargetCords());
-            _thrower.DataGatteringThrow(throwDirection, _deviationFactor);
-            LastThrowDirection = throwDirection;
+            var throwPosition = _thrower.GetThrowPosition();
+            var calcualtedDirection = neuralService.CalculateThrowDirection(throwPosition, target.GetTargetCords());
+            var ppDir = calcualtedDirection * 2 - Vector3.one;
+
+            _thrower.DataGatteringThrow(ppDir, _deviationFactor);
+
+            LastThrowDirection = ppDir;
             _lastThrowPosition = throwPosition;
             _first = false;
         }

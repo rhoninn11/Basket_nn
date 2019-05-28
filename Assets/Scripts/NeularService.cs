@@ -10,10 +10,10 @@ public class NeularService : MonoBehaviour
     private Vector3 lastDirectionToLern;
     private int duplicationTimes = 0;
 
-    [Range(1,5)]
+    [Range(1, 5)]
     public int hiddenLayersCount = 1;
 
-    [Range(3,20)]
+    [Range(3, 20)]
     public int hiddenLayerSize = 6;
 
     public void PopulateNeuralNetwork()
@@ -34,7 +34,7 @@ public class NeularService : MonoBehaviour
     public Vector3 CalculateThrowDirection(Vector3 position, Vector3 targetPosition)
     {
         if (_net == null)
-            return Vector3.up;
+            return new Vector3(0.5f, 1, 0.5f);
 
         double[] inputVector = { position.x, position.y, position.z, targetPosition.x, targetPosition.y, targetPosition.z };
         double[] output = _net.Compute(inputVector);
@@ -51,16 +51,18 @@ public class NeularService : MonoBehaviour
         double[] values = { throwPosition.x, throwPosition.y, throwPosition.z, targetPosition.x, targetPosition.y, targetPosition.z };
         double[] target = { directionToLern.x, directionToLern.y, directionToLern.z };
 
-        if(directionToLern == lastDirectionToLern){
-            if(++duplicationTimes > 5){
+        if (directionToLern == lastDirectionToLern)
+        {
+            if (++duplicationTimes > 5)
+            {
                 duplicationTimes = 0;
-                _net.TrainForSingleDataset(new DataSets(values,target),100);
-                Debug.Log("Focusedlearning");
+                _net.TrainForSingleDataset(new DataSets(values, target), 100);
+                // Debug.Log("Focusedlearning");
                 return;
 
             }
         }
-        _net.SingleTrain(new DataSets(values,target));
+        _net.SingleTrain(new DataSets(values, target));
         lastDirectionToLern = directionToLern;
     }
 }
