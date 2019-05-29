@@ -14,6 +14,8 @@ There are three buttons called by names according to methods they are provided f
 * <b> <i> Populate new neural network </b> </i> - starts throwing balls to basket using naural network,
 * <b> <i> Apply new time scale </b> </i> - sets the new Time Scale if the value of Slider is changed.
 
+![alt text](http://github.com/rhoninn11/Basket_nn/blob/master/5.PNG)
+
 ## Camera Control
 
 There are two camera modes with two possible transforms: changing rotation and position. Both rotation and position applies to camera and coudn't be changed at the same time. By default the camera is in mode <i> Changing Position </i> and the user is able to press the arrows to move the camera in the scene. To set the mode <i> Changing Rotation </i>, the user needs to click the <i> "M" </i> key and start moving the Mouse. 
