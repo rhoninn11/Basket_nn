@@ -40,8 +40,13 @@ public class UIDataSetter : MonoBehaviour
         HiddenLayersCount.onValueChanged.AddListener(delegate { neuralService.hiddenLayersCount = (int)HiddenLayersCount.value; });
         HiddenLayersSize.onValueChanged.AddListener(delegate { neuralService.hiddenLayerSize = (int)HiddenLayersSize.value; });
 
-        TimeScale.onValueChanged.AddListener(delegate { throwerService.timeScale = (int)TimeScale.value; });
+        TimeScale.onValueChanged.AddListener(delegate { throwerService.timeScale = (float)TimeScale.value; });
         DeviationFactor.onValueChanged.AddListener(delegate { throwerService._deviationFactor = (int)DeviationFactor.value; });
+    }
+
+    public void SetNewTimeScale()
+    {
+        Time.timeScale = throwerService.timeScale;
     }
 
     public void CancelApplication()

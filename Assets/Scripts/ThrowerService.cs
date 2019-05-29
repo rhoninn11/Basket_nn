@@ -67,7 +67,7 @@ public class ThrowerService : MonoBehaviour
                 float throwDistance;
                 var directionToLern = dataProcessor.findOptimalThrowDirection(collectedData, target, LastThrowDirection, out throwDistance);
 
-                _deviationFactor = (float)Sigmoid.Output((double)throwDistance*0.5 - 1) * 0.1f;
+                _deviationFactor = (float)Sigmoid.Output((double)throwDistance*0.5 - 2) * 0.4f;
                 
                 var ppDirToLern = (directionToLern + Vector3.one) * 0.5f;
 
@@ -83,6 +83,7 @@ public class ThrowerService : MonoBehaviour
             LastThrowDirection = ppDir;
             _lastThrowPosition = throwPosition;
             _first = false;
+
         }
     }
 
