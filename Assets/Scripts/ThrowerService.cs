@@ -3,17 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AnnClient))]
 public class ThrowerService : MonoBehaviour
 {
-    public int throwerCount;
     public BallThrower throwerPrefab;
-    public BallTarget throwerTarget;
+    public BallTarget target;
+    public DataProcessor dataProcessor;
+    public NeularService neuralService;
+
+    [Range(0.1f, 10)]
+    public float timeScale = 1;
+
+
     private BallThrower _thrower;
-
     private float _throwerExistingTime;
+    public Vector3 LastThrowDirection { get; set; }
+    private Vector3 _lastThrowPosition;
+    private bool _first = true;
 
-    public BallThrower SpawnThrower()
+
+    [Range(0.001f, 0.5f)]
+    public float _deviationFactor;
+
+    private BallThrower _SpawnThrower()
     {
         if (throwerPrefab == null)
             throw new Exception("there is no thrower prefab");
@@ -30,16 +41,12 @@ public class ThrowerService : MonoBehaviour
         return new Vector3(xValue, 2, zValue);
     }
 
-    public string CollectTrajectoryData()
-    {
-        VSDisct trajectories = _thrower.CollectBallsTrajecory();
-
-        return JsonUtility.ToJson(trajectories);
-    }
-
-    public void MoveThrowerOnTrajectory(float timeDelta)
+    private void _UpdateThrowerTime(float timeDelta)
     {
         _throwerExistingTime += timeDelta;
+    }
+    private void _MoveThrowerOnTrajectory()
+    {
         float f = 0.1f;
         float omega = 2 * Mathf.PI * f;
         int multipler = 2;
@@ -49,27 +56,57 @@ public class ThrowerService : MonoBehaviour
         _thrower.transform.Translate(xDelta, 0, zDelta);
     }
 
-    public void CreateThrower(){
-        if(_thrower != null)
+    private void _ThrowingManagment()
+    {
+        if (_thrower.IsReady())
+        {
+            List<TrajectoryData> collectedData = _thrower.CollectTrajecoryData();
+
+            if (collectedData.Count > 0)
+            {
+                float throwDistance;
+                var directionToLern = dataProcessor.findOptimalThrowDirection(collectedData, target, LastThrowDirection, out throwDistance);
+
+                _deviationFactor = (float)Sigmoid.Output((double)throwDistance*0.5 - 2) * 0.4f;
+                
+                var ppDirToLern = (directionToLern + Vector3.one) * 0.5f;
+
+                if (!_first)
+                    neuralService.NetAdaptation(_lastThrowPosition, target.GetTargetCords(), ppDirToLern);
+            }
+            var throwPosition = _thrower.GetThrowPosition();
+            var calcualtedDirection = neuralService.CalculateThrowDirection(throwPosition, target.GetTargetCords());
+            var ppDir = calcualtedDirection * 2 - Vector3.one;
+
+            _thrower.DataGatteringThrow(ppDir, _deviationFactor);
+
+            LastThrowDirection = ppDir;
+            _lastThrowPosition = throwPosition;
+            _first = false;
+
+        }
+    }
+
+    public void CreateThrower()
+    {
+        if (_thrower != null)
             Destroy(_thrower.gameObject);
 
         _throwerExistingTime = 0;
-        _thrower = SpawnThrower();
+        _deviationFactor = 0.1f;
+        _thrower = _SpawnThrower();
+        dataProcessor.theHighestPerformaceAchived = 1000;
+        Time.timeScale = timeScale;
     }
 
-    public async void ThrowingProccess()
+    public void FixedUpdate()
     {
-        string inputData = CollectTrajectoryData();
-        string command = "solve" + inputData;
-
-        string outputJson = await GetComponent<AnnClient>().ServerCommand("solve" + inputData);
-        VS throwData = JsonUtility.FromJson<VS>(outputJson);
-
-    }
-
-    public void FixedUpdate(){
-        if(_thrower != null)
-            MoveThrowerOnTrajectory(Time.fixedDeltaTime);
+        if (_thrower != null)
+        {
+            _UpdateThrowerTime(Time.fixedDeltaTime);
+            //_MoveThrowerOnTrajectory();
+            _ThrowingManagment();
+        }
     }
 
 
