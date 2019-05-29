@@ -14,7 +14,7 @@ There are three buttons called by names according to methods they are provided f
 * <b> <i> Populate new neural network </b> </i> - starts throwing balls to basket using naural network,
 * <b> <i> Apply new time scale </b> </i> - sets the new Time Scale if the value of Slider is changed.
 
-![Neural Network project in Unity](http://github.com/rhoninn11/Basket_nn/blob/master/5.PNG)
+![Neural Network project in Unity](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/1.PNG)
 
 ## Camera Control
 
