@@ -15,15 +15,20 @@ There are three buttons called by names according to methods they are provided f
 * <b> <i> Apply new time scale </b> </i> - sets the new Time Scale if the value of Slider is changed.
 
 ![](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/5.PNG)
-![](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/6.PNG)
 
 ## Camera Control
 
 There are two camera modes with two possible transforms: changing rotation and position. Both rotation and position applies to camera and coudn't be changed at the same time. By default the camera is in mode <i> Changing Position </i> and the user is able to press the arrows to move the camera in the scene. To set the mode <i> Changing Rotation </i>, the user needs to click the <i> "M" </i> key and start moving the Mouse. 
 
+![](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/6.PNG)
+
 ## Neural Network in C# 
 
-The algorithm is prepared for using not only in Unity engine but also for different platforms. All the main parts of the network are clearly described in separated classes. The neural network learns according to initial position of the cube and the target point which is the basket's location. It 'looks for' the best precision for throwing with the most optimized ball's trajectory. In every 27-balls group there is one ball with the red color and it means the ball throwed with the neural network algorithm. All the other balls are thrown in the close distance from it.  
+The algorithm is prepared for using not only in Unity engine but also for different platforms. All the main parts of the network are clearly described in separated classes. The neural network learns according to initial position of the cube and the target point which is the basket's location. It 'looks for' the best precision for throwing with the most optimized ball's trajectory. In every 27-balls group there is one ball with the red color and it means the ball throwed with the neural network algorithm. All the other balls are thrown in the close distance from it. 
+
+![](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/2.PNG)
+![](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/3.PNG)
+![](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/4.PNG)
 
 
 
