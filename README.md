@@ -1,10 +1,19 @@
-# Basket Ball _ Neural Network in Unity3D
+# Introduction 
+The main goal of the project was to create a neural network algorithm in <b> C# </b> that could be used for throwing balls to basket with the highest precision. The project is adapted to <b> Unity3D </b>, but the neural network algorithm has been written regardless of  requirements of the <b> Unity </b> platform - the engine was used only for simple simulation, testing and verification.  
 
-The main goal of the project was to create a neural network algorithm in <b> C# </b> that could be used for throwing balls to basket with the highest precision.The project is adapted to <b> Unity3D </b>, but the neural network algorithm has been written regardless of  requirements of the <b> Unity </b> platform - the engine was used only for simple simulation, testing and verification. 
+# Getting Started
+To start the application, open the project from Unity environment and provide the location of the folder downloaded from this site (go to <i>File->Open Project</i>, and then specify a Unity project's folder). After successful opening, in the Unity environment go to the <i> Assets->Scene </i> and choose the "SampleScene.Unity". After these steps, the following scene should appear on your screen. 
+
+<img align="center" src="https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/5.PNG"/>
+
+# Build and Test
+You can click on the "Run" button to start testing, or build it and test as the standalone desktop application. 
+
+# Guide
 
 ## User Interface 
 
-There is only one Unity scene with the basket and the obstacle located on the ground. There is also simple GUI provided. By using its controls, the user is able to set main parameters for neural network, such as:
+There is the graphical user interface provided to control the neural network settings. By using its functionality, the user is able to manage values of the following parameters:
 * <b> <i> Hidden layers' count and size, </b> </i> 
 * <b> <i> Time scale  </b> </i> - used for managing time during learning,
 * <b> <i> Deviation factor </b> </i> - which means the initial distance between throwed balls,
@@ -13,8 +22,6 @@ There are three buttons called by names according to methods they are provided f
 * <b> <i> Spawn Throwers </b> </i> - creates a simple cube with a random position and starts throwing 27 balls per Time in random directions with the distance between each other according to Deviation Factor,
 * <b> <i> Populate new neural network </b> </i> - starts throwing balls to basket using naural network,
 * <b> <i> Apply new time scale </b> </i> - sets the new Time Scale if the value of Slider is changed.
-
-![](https://raw.githubusercontent.com/rhoninn11/Basket_nn/master/5.PNG)
 
 ## Camera Control
 
